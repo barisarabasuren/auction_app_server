@@ -1,0 +1,980 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "Auction App API Documentation",
+    "contact": {
+      "email": "barisarabasuren@gmail.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "artworks",
+      "description": "desc"
+    },
+    {
+      "name": "auth",
+      "description": "desc"
+    },
+    {
+      "name": "bid",
+      "description": "desc"
+    },
+    {
+      "name": "collections",
+      "description": "desc"
+    },
+    {
+      "name": "galleries",
+      "description": "desc"
+    }
+  ],
+  "paths": {
+    "/artworks": {
+      "post": {
+        "tags": [
+          "artworks"
+        ],
+        "summary": "Add a new artwork to the collection",
+        "security": [
+          {
+            "galleryAuth": [
+              "admin"
+            ]
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "collection_id": {
+                    "type": "string"
+                  },
+                  "artwork_name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "beginning_price": {
+                    "type": "number"
+                  },
+                  "auction_starts": {
+                    "type": "string"
+                  },
+                  "auction_ends": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "$ref": "#/components/responses/MissingCredentials"
+          }
+        }
+      }
+    },
+    "/artworks/{collection_id}": {
+      "get": {
+        "tags": [
+          "artworks"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection_id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "summary": "Get all of the artworks of a collection",
+        "responses": {
+          "200": {
+            "description": "Artworks of the collection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "artwork_id": {
+                        "type": "string"
+                      },
+                      "artwork_name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong Collection Id"
+          }
+        }
+      }
+    },
+    "/artworks/artwork/{artwork_id}": {
+      "get": {
+        "tags": [
+          "artworks"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "artwork_id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "summary": "Get artwork",
+        "responses": {
+          "200": {
+            "description": "Artwork object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Artwork"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong Artwork Id"
+          }
+        }
+      }
+    },
+    "/auth/gallery/signup": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Gallery signup",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "gallery_name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "$ref": "#/components/responses/MissingCredentials"
+          }
+        }
+      }
+    },
+    "/auth/gallery/token": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Gallery login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "refreshToken": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/MissingCredentials"
+          }
+        }
+      }
+    },
+    "/auth/gallery/refresh": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Get gallery refresh token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refrehToken": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong refresh token"
+          }
+        }
+      }
+    },
+    "/auth/user/signup": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "User signup",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "surname": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "$ref": "#/components/responses/MissingCredentials"
+          }
+        }
+      }
+    },
+    "/auth/user/token": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "User login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "refreshToken": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/MissingCredentials"
+          }
+        }
+      }
+    },
+    "/auth/user/refresh": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Get user refresh token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refrehToken": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong refresh token"
+          }
+        }
+      }
+    },
+    "/auth/user": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Get profile information",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "surname": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/bid/{artwork_id}": {
+      "post": {
+        "tags": [
+          "bid"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "artwork_id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "summary": "Bid on an artwork",
+        "security": [
+          {
+            "userAuth": [
+              "admin"
+            ]
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "price": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/MissingCredentials"
+          }
+        }
+      }
+    },
+    "/bid/history": {
+      "get": {
+        "tags": [
+          "bid"
+        ],
+        "summary": "Get bid history of a user",
+        "security": [
+          {
+            "userAuth": [
+              "admin"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "artwork_id": {
+                        "type": "string"
+                      },
+                      "artwork_name": {
+                        "type": "string"
+                      },
+                      "image": {
+                        "type": "string"
+                      },
+                      "bids": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "bid_id": {
+                              "type": "string"
+                            },
+                            "user_id": {
+                              "type": "string"
+                            },
+                            "price": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                        
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/collections": {
+      "post": {
+        "tags": [
+          "collections"
+        ],
+        "summary": "Add a new collection to the gallery",
+        "security": [
+          {
+            "galleryAuth": [
+              "admin"
+            ]
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "collection_name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "$ref": "#/components/responses/MissingCredentials"
+          }
+        }
+      }
+    },
+    "/collections/{gallery_id}": {
+      "get": {
+        "tags": [
+          "collections"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "gallery_id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "summary": "Get all of the collections of a gallery",
+        "responses": {
+          "200": {
+            "description": "Collections of the gallery",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "collection_id": {
+                        "type": "string"
+                      },
+                      "collection_name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong Gallery Id"
+          }
+        }
+      }
+    },
+    "/collections/collection/{collection_id}": {
+      "get": {
+        "tags": [
+          "collections"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection_id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "summary": "Get collection",
+        "responses": {
+          "200": {
+            "description": "Artworks of collection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Collections"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong Collection Id"
+          }
+        }
+      }
+    },
+    "/galleries": {
+      "get": {
+        "tags": [
+          "galleries"
+        ],
+        "summary": "Get All Galleries",
+        "responses": {
+          "200": {
+            "description": "All of the galleries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "gallery_id": {
+                        "type": "string"
+                      },
+                      "gallery_name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong"
+          }
+        }
+      }
+    },
+    "/galleries/{gallery_id}": {
+      "get": {
+        "tags": [
+          "galleries"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "gallery_id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "summary": "Get gallery",
+        "responses": {
+          "200": {
+            "description": "Gallery",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "gallery_name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Gallery Id does not exist"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "MissingCredentials": {
+        "description": "Missing Credentials",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "missingCredentials": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "galleryAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "userAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Artwork": {
+        "type": "object",
+        "required": [
+          "collection_id",
+          "artwork_name",
+          "image",
+          "description",
+          "beginning_price",
+          "auction_starts",
+          "auction_ends"
+        ],
+        "properties": {
+          "gallery_id": {
+            "type": "string"
+          },
+          "collection_id": {
+            "type": "string"
+          },
+          "artwork_id": {
+            "type": "string"
+          },
+          "artwork_name": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "beginning_price": {
+            "type": "number"
+          },
+          "auction_starts": {
+            "type": "string",
+            "format": "date-string"
+          },
+          "auction_ends": {
+            "type": "string",
+            "format": "date-string"
+          },
+          "isAuctionOn": {
+            "type": "boolean"
+          },
+          "winner": {
+            "$ref": "#/components/schemas/Bid"
+          },
+          "bids": {
+            "type": "array",
+            "xml": {
+              "name": "bid",
+              "wrapped": true
+            },
+            "items": {
+              "$ref": "#/components/schemas/Bid"
+            }
+          }
+        }
+      },
+      "Bid": {
+        "type": "object",
+        "required": [
+          "bid_id",
+          "user_id",
+          "price"
+        ],
+        "properties": {
+          "bid_id": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          }
+        }
+      },
+      "Collections": {
+        "type": "object",
+        "required": [
+          "gallery_id",
+          "collection_id",
+          "description",
+          "image"
+        ],
+        "properties": {
+          "gallery_id": {
+            "type": "string"
+          },
+          "collection_id": {
+            "type": "string"
+          },
+          "collection_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          }
+        }
+      },
+      "Galleries": {
+        "type": "object",
+        "required": [
+          "gallery_id",
+          "gallery_name",
+          "logo",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "gallery_id": {
+            "type": "string"
+          },
+          "gallery_name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "RefreshToken": {
+        "required": [
+          "refreshToken",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-string"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": [
+          "user_id",
+          "name",
+          "surname",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
