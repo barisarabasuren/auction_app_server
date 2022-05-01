@@ -7,7 +7,7 @@ This repository contains two components:
 
 This document aims to give an overview about the techstack and API documentation. In addition, the reader gets to know how to install and setup a local development environment.
 
-# Related repositories
+### Related repositories
 
 * the **mobile client** ([respository](https://github.com/barisarabasuren/auction_app_mobile))
 
