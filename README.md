@@ -2,7 +2,7 @@
 
 This repository contains two components:
 
-* the **server**, which provides the API to manage the showcase Artworks and perform auctions([Deployed on Heroku](https://git.heroku.com/cryptic-beyond-14688.git))
+* the **server**, which provides the API to manage the showcase Artworks and perform auctions([Deployed on Heroku](https://cryptic-beyond-14688.herokuapp.com/))
 * the **database**, MongoDB that connects MongoDB Atlas
 
 This document aims to give an overview about the techstack and API documentation. In addition, the reader gets to know how to install and setup a local development environment.
@@ -28,7 +28,7 @@ Extra libraries used were:
 - [uuid](https://github.com/uuidjs/uuid/)
 
 ### API Documentation
-An SwaggerUI API documentation can be found [here](https://git.heroku.com/cryptic-beyond-14688.git/docs).
+An SwaggerUI API documentation can be found [here](https://cryptic-beyond-14688.herokuapp.com/docs/).
 
 ### Installation
 Requirements:
@@ -43,4 +43,4 @@ npm run start
 
 # DB Model
 
-![Schema](./image/db_model.jpeg?raw=true)
+![Schema](./db_model.jpeg?raw=true)
